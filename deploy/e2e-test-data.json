@@ -1,0 +1,37 @@
+{
+  "meta": {
+    "composeNetwork": "v1_default",
+    "internalBaseUrls": {
+      "workflow": "http://workflow-service:8081",
+      "execution": "http://execution-service:8082",
+      "trigger": "http://trigger-service:8084"
+    },
+    "notes": [
+      "Run API calls from a container on the compose network (see e2e-smoke.ps1) or publish ports for local curl.",
+      "Workflow must be PUBLISHED before POST /api/executions/trigger succeeds.",
+      "Use a fresh idempotencyKey for each trigger to create a new run (or omit for null).",
+      "Set TRIGGER_CRON_WORKFLOW_ID in .env or compose to match your published workflow id (default 1)."
+    ]
+  },
+  "workflowCreate": {
+    "name": "my-e2e-workflow",
+    "definitionJson": "{}"
+  },
+  "workflowCreateWithGraph": {
+    "name": "my-e2e-workflow-with-nodes",
+    "definitionJson": "{\"nodes\":[{\"id\":\"start\",\"type\":\"start\",\"position\":{\"x\":0,\"y\":0}}],\"edges\":[]}"
+  },
+  "executionTrigger": {
+    "workflowId": 1,
+    "tenantId": "e2e-tenant",
+    "idempotencyKey": "e2e-run-001"
+  },
+  "triggerWebhook": {
+    "workflowId": 1,
+    "tenantId": "webhook-tenant",
+    "idempotencyKey": "webhook-run-001"
+  },
+  "optionalWebhookHeader": {
+    "X-Webhook-Secret": "set-only-if-trigger.webhook.secret-is-configured"
+  }
+}
